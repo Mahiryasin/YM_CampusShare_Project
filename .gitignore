@@ -1,0 +1,9 @@
+# Maven build output - tüm servislerin target klasörlerini yoksay
+**/target/
+
+# Log files
+*.log
+
+# Environment variables - ASLA GitHub'a yükleme!
+.env
+**/.env
