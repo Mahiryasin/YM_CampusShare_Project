@@ -1,0 +1,24 @@
+{
+    "folders": [
+        {
+            "name": "User Service",
+            "path": "app"
+        },
+        {
+            "name": "Catalog Service",
+            "path": "catalog-service"
+        },
+        {
+            "name": "Rental Service",
+            "path": "rental-service"
+        },
+        {
+            "name": "Review Service",
+            "path": "review-service"
+        }
+    ],
+    "settings": {
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "git.ignoreLimitWarning": true
+    }
+}

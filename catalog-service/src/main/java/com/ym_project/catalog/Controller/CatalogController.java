@@ -1,0 +1,81 @@
+package com.ym_project.catalog.Controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ym_project.catalog.DTO.ItemRequestDTO;
+import com.ym_project.catalog.DTO.ItemResponseDTO;
+import com.ym_project.catalog.Service.ICatalogService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/catalog")
+@RequiredArgsConstructor
+public class CatalogController {
+
+    private final ICatalogService catalogService;
+
+    // POST /api/catalog/items  → yeni item ekle
+    @PostMapping("/items")
+    public ResponseEntity<ItemResponseDTO> createItem(@Valid @RequestBody ItemRequestDTO request) {
+        ItemResponseDTO response = catalogService.createItem(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // GET /api/catalog/items       → tüm itemları listele
+    // GET /api/catalog/items?category=Kitap   → kategoriye göre filtrele
+    // GET /api/catalog/items?ownerUserId=3    → sahibine göre filtrele
+    @GetMapping("/items")
+    public ResponseEntity<List<ItemResponseDTO>> getItems(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Long ownerUserId) {
+
+        List<ItemResponseDTO> items;
+
+        if (category != null) {
+            items = catalogService.getItemsByCategory(category);
+        } else if (ownerUserId != null) {
+            items = catalogService.getItemsByOwner(ownerUserId);
+        } else {
+            items = catalogService.getAllItems();
+        }
+
+        return ResponseEntity.ok(items);
+    }
+
+    // GET /api/catalog/items/{id}  → id'ye göre item getir
+    @GetMapping("/items/{id}")
+    public ResponseEntity<ItemResponseDTO> getItemById(@PathVariable Long id) {
+        ItemResponseDTO response = catalogService.getItemById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    // PUT /api/catalog/items/{id}  → item güncelle
+    @PutMapping("/items/{id}")
+    public ResponseEntity<ItemResponseDTO> updateItem(
+            @PathVariable Long id,
+            @Valid @RequestBody ItemRequestDTO request) {
+        ItemResponseDTO response = catalogService.updateItem(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    // DELETE /api/catalog/items/{id}  → item sil
+    @DeleteMapping("/items/{id}")
+    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
+        catalogService.deleteItem(id);
+        return ResponseEntity.noContent().build();
+    }
+}
