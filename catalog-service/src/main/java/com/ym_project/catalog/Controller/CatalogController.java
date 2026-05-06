@@ -14,10 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ym_project.catalog.DTO.ItemRequestDTO;
 import com.ym_project.catalog.DTO.ItemResponseDTO;
+import com.ym_project.catalog.ExceptionHandler.ApiError;
 import com.ym_project.catalog.Service.ICatalogService;
 
+import feign.FeignException;
+import feign.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -27,12 +33,22 @@ import lombok.RequiredArgsConstructor;
 public class CatalogController {
 
     private final ICatalogService catalogService;
+    private final com.ym_project.catalog.Proxy.OpenFeign openFeign;
 
     // POST /api/catalog/items  → yeni item ekle
     @PostMapping("/items")
-    public ResponseEntity<ItemResponseDTO> createItem(@Valid @RequestBody ItemRequestDTO request) {
-        ItemResponseDTO response = catalogService.createItem(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<?> createItem(@Valid @RequestBody ItemRequestDTO request) throws JsonMappingException, JsonProcessingException {
+        ObjectMapper objectMapper=new ObjectMapper();
+        try {
+            openFeign.GetuserProfile(request.getOwnerUserId());
+            ItemResponseDTO response = catalogService.createItem(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        } catch (FeignException exception) {
+            // User Service'den gelen hata mesajını  olduğu gibi döndür
+          ApiError<?> apiError=objectMapper.readValue(exception.contentUTF8(),ApiError.class);
+            return ResponseEntity.status(exception.status()).body(apiError);
+        }
     }
 
     // GET /api/catalog/items       → tüm itemları listele

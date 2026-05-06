@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -108,6 +109,7 @@ public class UserService {
         }
     }
 
+    @Cacheable(value = "profile",key = "#id",unless = "#id == null")
     public UserProfileResponse getProfile(Long id) {
         UserProfile userProfile = userReporistory.findById(id)
                 .orElseThrow(() -> new BaseException(new ErrorResponse(ERROR.NOT_FOUND.getError_message(), ERROR.NOT_FOUND.getStatus())));

@@ -15,6 +15,14 @@
         {
             "name": "Review Service",
             "path": "review-service"
+        },
+        {
+            "name": "Naming Server (Eureka)",
+            "path": "C:\\Users\\xyz\\naming-server"
+        },
+        {
+            "name": "API Gateway",
+            "path": "api-gateway"
         }
     ],
     "settings": {
