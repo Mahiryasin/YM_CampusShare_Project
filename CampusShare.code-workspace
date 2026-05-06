@@ -18,7 +18,7 @@
         },
         {
             "name": "Naming Server (Eureka)",
-            "path": "C:\\Users\\xyz\\naming-server"
+            "path": "naming-server"
         },
         {
             "name": "API Gateway",
