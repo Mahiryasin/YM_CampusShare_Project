@@ -8,10 +8,10 @@ import java.util.List;
 
 import javax.management.relation.Role;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import com.ym_project.Entity.UserCredentials;
 import com.ym_project.Entity.UserProfile;
@@ -19,6 +19,7 @@ import com.ym_project.Entity.UserProfile;
 import lombok.Data;
 
 @Data
+@Component
 public class MyUserDetails implements UserDetails {
 
     private String email;

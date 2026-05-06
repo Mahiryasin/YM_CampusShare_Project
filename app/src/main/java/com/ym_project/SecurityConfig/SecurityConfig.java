@@ -66,14 +66,14 @@ public class SecurityConfig {
         return urlBasedCorsConfigurationSource;
     }
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity){
+    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
        AuthenticationManagerBuilder authenticationManagerBuilder=httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
        authenticationManagerBuilder
        .userDetailsService(userDetailService)
        .passwordEncoder(passwordEncoder());
 
        return authenticationManagerBuilder.build();
-    } 
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
