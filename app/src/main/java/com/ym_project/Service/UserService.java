@@ -116,18 +116,22 @@ public class UserService {
         return mapperClass.userProfileResponse(userProfile);
     }
 
+    public long getUserCount() {
+        return userReporistory.count();
+    }
+
     // Token settings methods
 
     protected String GenerateToken(String email){
        refreshTokenReporistory.SetusedAllTokens(email);
 
-
-
        RefreshToken refreshToken=new RefreshToken();
        String Token=UUID.randomUUID()+" - "+ System.currentTimeMillis();
 
        LocalDate ExpireDate=LocalDate.now().plusDays(7);
-      
+    
+       refreshToken.setEmail(email);
+       refreshToken.setIssued(false);
        refreshToken.setExpireDate(ExpireDate);
        refreshToken.setToken(Token);
        refreshTokenReporistory.save(refreshToken);

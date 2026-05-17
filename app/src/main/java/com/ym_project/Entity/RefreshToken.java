@@ -34,7 +34,7 @@ public class RefreshToken {
     private LocalDateTime CreateDate=LocalDateTime.now();
 
     @Column(name = "issued",nullable = false)
-    private boolean issued=true;
+    private boolean issued=false;
 
     @NotBlank
     @Column(name = "email", nullable = false)

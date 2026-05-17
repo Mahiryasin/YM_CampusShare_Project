@@ -69,6 +69,11 @@ public class UserController {
        return ResponseEntity.ok(userDetails);
     } 
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> getUserCount() {
+        return ResponseEntity.ok(userService.getUserCount());
+    }
+
     @PostMapping("/refreshToken")
     public ResponseEntity<LoginResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) throws Exception{
         return ResponseEntity.ok(refreshTokenService.refreshToken(refreshTokenRequest));

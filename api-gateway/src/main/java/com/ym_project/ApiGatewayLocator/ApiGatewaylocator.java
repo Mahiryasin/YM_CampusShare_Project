@@ -12,8 +12,12 @@ public class ApiGatewaylocator {
     @Bean
 
     public RouteLocator routes(RouteLocatorBuilder routeLocatorBuilder){
-   return routeLocatorBuilder.routes().route((route)->route.path("/api/catalog/**").uri("lb://catalog-service")).route((route)->route.path("/api/users/**").uri("lb://app"))
-    .route((route)->route.path("/api/rentals/**").uri("lb://rental-service")).build();
+   return routeLocatorBuilder.routes()
+     .route((route)->route.path("/api/catalog/**").uri("lb://catalog-service"))
+     .route((route)->route.path("/api/users/**").uri("lb://app"))
+     .route((route)->route.path("/api/rentals/**").uri("lb://rental-service"))
+     .route((route)->route.path("/api/reviews/**").uri("lb://review-service"))
+     .build();
  }
 
 }
