@@ -7,8 +7,13 @@ import com.ym_project.catalog.DTO.ItemRequestDTO;
 import com.ym_project.catalog.DTO.ItemResponseDTO;
 import com.ym_project.catalog.Entity.Item;
 
-@Mapper(componentModel = "spring")
+import org.mapstruct.factory.Mappers;
+
+@Mapper
 public interface ItemMapper {
+
+    ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
+
 
     /**
      * RequestDTO → Entity (yeni kayıt için)

@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class CatalogService implements ICatalogService {
 
     private final IItemRepository itemRepository;
-    private final ItemMapper itemMapper;
+    private final ItemMapper itemMapper = ItemMapper.INSTANCE;
 
     // ─── CREATE ──────────────────────────────────────────────────────────────
 

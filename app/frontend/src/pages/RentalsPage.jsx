@@ -183,8 +183,8 @@ export default function RentalsPage() {
     : rentals.filter((r) => r.status === statusFilter);
 
   // Summary stats calculations
-  const totalSpent = rentals.filter(r => r.renterUserId === user?.id).reduce((s, r) => s + r.totalPrice, 0);
-  const totalEarned = rentals.filter(r => r.ownerUserId === user?.id).reduce((s, r) => s + r.totalPrice, 0);
+  const totalSpent = rentals.filter(r => r.renterUserId === user?.id && ['APPROVED', 'ACTIVE', 'COMPLETED'].includes(r.status)).reduce((s, r) => s + r.totalPrice, 0);
+  const totalEarned = rentals.filter(r => r.ownerUserId === user?.id && ['APPROVED', 'ACTIVE', 'COMPLETED'].includes(r.status)).reduce((s, r) => s + r.totalPrice, 0);
   const activeCount = rentals.filter((r) => r.status === 'ACTIVE').length;
   const pendingCount = rentals.filter((r) => r.status === 'PENDING').length;
 
@@ -259,23 +259,24 @@ export default function RentalsPage() {
           boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
           '&:hover': { transform: 'none !important' },
         }}>
-          <Tabs
-            value={tab}
-            onChange={(_, v) => { setTab(v); setStatusFilter('ALL'); }}
-            sx={{
-              px: 2, pt: 1,
-              '& .MuiTab-root': {
-                fontWeight: 600, textTransform: 'none', fontSize: '0.9rem',
-                minHeight: 48,
-              },
-              '& .Mui-selected': { color: '#6366f1' },
-              '& .MuiTabs-indicator': { background: '#6366f1', borderRadius: '4px 4px 0 0', height: 3 },
-            }}
-          >
-            <Tab label="Kiraladıklarım" />
-            <Tab label="Gelen Talepler" />
-          </Tabs>
-          <Divider />
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs
+              value={tab}
+              onChange={(_, v) => { setTab(v); setStatusFilter('ALL'); }}
+              sx={{
+                px: 2,
+                '& .MuiTab-root': {
+                  fontWeight: 600, textTransform: 'none', fontSize: '0.9rem',
+                  minHeight: 52,
+                },
+                '& .Mui-selected': { color: '#6366f1' },
+                '& .MuiTabs-indicator': { backgroundColor: '#6366f1', borderRadius: '4px 4px 0 0', height: 3 },
+              }}
+            >
+              <Tab label="Kiraladıklarım" />
+              <Tab label="Gelen Talepler" />
+            </Tabs>
+          </Box>
 
           {/* Status filter chips */}
           <Box className="flex gap-2 flex-wrap p-3">

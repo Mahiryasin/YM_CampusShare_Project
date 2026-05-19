@@ -8,6 +8,9 @@ import com.ym_project.DTO.UserProfileResponse;
 import com.ym_project.Entity.UserProfile;
 
 
+import org.springframework.stereotype.Component;
+
+@Component
 @Mapper(componentModel = "spring")
 public interface MapperClass {
 

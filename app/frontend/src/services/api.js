@@ -113,7 +113,10 @@ export const catalogService = {
     if (category && category !== 'Tümü') params.category = category;
     if (ownerUserId) params.ownerUserId = ownerUserId;
     const response = await api.get('/api/catalog/items', { params });
-    return response.data;
+    // Catalog Service returns a paged object like { content: [...] } instead of a direct array
+    return response.data && Array.isArray(response.data.content)
+      ? response.data.content
+      : (Array.isArray(response.data) ? response.data : []);
   },
   getItemById: async (id) => {
     const response = await api.get(`/api/catalog/items/${id}`);

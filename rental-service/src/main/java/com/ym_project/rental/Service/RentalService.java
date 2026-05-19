@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class RentalService implements IRentalService {
 
     private final IRentalRepository rentalRepository;
-    private final RentalMapper rentalMapper;
+    private final RentalMapper rentalMapper = RentalMapper.INSTANCE;
 
     // ─── CREATE ──────────────────────────────────────────────────────────────
 

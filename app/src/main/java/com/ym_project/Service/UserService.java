@@ -120,6 +120,13 @@ public class UserService {
         return userReporistory.count();
     }
 
+    public void updateTrustScore(Long userId, Integer newScore) {
+        UserProfile userProfile = userReporistory.findById(userId)
+                .orElseThrow(() -> new BaseException(new ErrorResponse(ERROR.NOT_FOUND.getError_message(), ERROR.NOT_FOUND.getStatus())));
+        userProfile.setTrustScore(newScore);
+        userReporistory.save(userProfile);
+    }
+
     // Token settings methods
 
     protected String GenerateToken(String email){

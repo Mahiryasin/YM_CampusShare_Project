@@ -1,6 +1,7 @@
 package com.ym_project.catalog.Controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,25 +52,42 @@ public class CatalogController {
         }
     }
 
-    // GET /api/catalog/items       → tüm itemları listele
+    // GET /api/catalog/items       → tüm itemları listele (sayfalama destekli)
     // GET /api/catalog/items?category=Kitap   → kategoriye göre filtrele
     // GET /api/catalog/items?ownerUserId=3    → sahibine göre filtrele
+    // GET /api/catalog/items?page=0&size=10  → sayfa numarası ve boyutu
     @GetMapping("/items")
-    public ResponseEntity<List<ItemResponseDTO>> getItems(
+    public ResponseEntity<Map<String, Object>> getItems(
             @RequestParam(required = false) String category,
-            @RequestParam(required = false) Long ownerUserId) {
+            @RequestParam(required = false) Long ownerUserId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-        List<ItemResponseDTO> items;
+        List<ItemResponseDTO> allItems;
 
         if (category != null) {
-            items = catalogService.getItemsByCategory(category);
+            allItems = catalogService.getItemsByCategory(category);
         } else if (ownerUserId != null) {
-            items = catalogService.getItemsByOwner(ownerUserId);
+            allItems = catalogService.getItemsByOwner(ownerUserId);
         } else {
-            items = catalogService.getAllItems();
+            allItems = catalogService.getAllItems();
         }
 
-        return ResponseEntity.ok(items);
+        // Manuel sayfalama
+        int totalElements = allItems.size();
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+        int fromIndex = Math.min(page * size, totalElements);
+        int toIndex = Math.min(fromIndex + size, totalElements);
+        List<ItemResponseDTO> pagedItems = allItems.subList(fromIndex, toIndex);
+
+        Map<String, Object> response = new java.util.HashMap<>();
+        response.put("content", pagedItems);
+        response.put("totalElements", totalElements);
+        response.put("totalPages", totalPages);
+        response.put("currentPage", page);
+        response.put("pageSize", size);
+
+        return ResponseEntity.ok(response);
     }
 
     // GET /api/catalog/items/{id}  → id'ye göre item getir

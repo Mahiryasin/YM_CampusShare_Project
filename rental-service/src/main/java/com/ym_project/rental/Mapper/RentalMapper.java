@@ -8,9 +8,13 @@ import com.ym_project.rental.DTO.RentalRequestDTO;
 import com.ym_project.rental.DTO.RentalResponseDTO;
 import com.ym_project.rental.Entity.Rental;
 
-@Mapper(componentModel = "spring")
-@Component
+import org.mapstruct.factory.Mappers;
+
+@Mapper
 public interface RentalMapper {
+
+    RentalMapper INSTANCE = Mappers.getMapper(RentalMapper.class);
+
 
     Rental toEntity(RentalRequestDTO request);
 
