@@ -20,6 +20,8 @@ import com.ym_project.DTO.LoginResponse;
 import com.ym_project.DTO.RefreshTokenRequest;
 import com.ym_project.DTO.RegisterRequest;
 import com.ym_project.DTO.UserProfileResponse;
+import com.ym_project.DTO.ForgotPasswordRequest;
+import com.ym_project.DTO.ResetPasswordRequest;
 import com.ym_project.Entity.RefreshToken;
 import com.ym_project.Service.RefreshTokenService;
 import com.ym_project.Service.UserService;
@@ -86,6 +88,19 @@ public class UserController {
     @PostMapping("/refreshToken")
     public ResponseEntity<LoginResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) throws Exception{
         return ResponseEntity.ok(refreshTokenService.refreshToken(refreshTokenRequest));
+    }
 
+    // POST /api/users/forgot-password
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        userService.forgotPassword(request.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    // POST /api/users/reset-password
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(request.getEmail(), request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok().build();
     }
 }

@@ -6,6 +6,7 @@ public enum ERROR {
     EMAIL_ALREADY_EXISTS("Bu email zaten kayıtlı", 409),
     BAD_CREDENTIALS("Email veya şifre hatalı", 401),
     TOKEN_EXPIRED("Refresh Token süresi dolmuş veya geçersiz!", 401),
+    INVALID_TOKEN("Geçersiz veya süresi dolmuş doğrulama kodu", 400),
     GENERAL_ERROR("Beklenmeyen bir hata oluştu", 500);
 
     private final String error_message;

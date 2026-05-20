@@ -203,6 +203,7 @@ export default function HomePage() {
                 </Button>
                 <Button
                   variant="outlined" size="large"
+                  component={Link} to="/how-it-works"
                   sx={{
                     borderColor: 'rgba(148,163,184,0.3)', color: '#e2e8f0',
                     px: 4, py: 1.6, fontSize: '0.95rem', borderRadius: '14px',

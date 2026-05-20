@@ -29,6 +29,9 @@ import com.ym_project.SecurityService.JwtTokenProvider;
 import com.ym_project.SecurityService.UserDetailService;
 import com.ym_project.UserReporistory.IUserCredentialsRepository;
 import com.ym_project.UserReporistory.IUserReporistory;
+import com.ym_project.UserReporistory.IPasswordResetTokenRepository;
+import com.ym_project.Entity.PasswordResetToken;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -41,6 +44,8 @@ public class UserService {
     private final IUserCredentialsRepository userCredentialsRepository;
     private final UserDetailService userDetailService;
     private final IRefreshTokenReporistory refreshTokenReporistory;
+    private final IPasswordResetTokenRepository passwordResetTokenRepository;
+    private final EmailService emailService;
 
     public UserService(IUserReporistory userReporistory,
                        AuthenticationManager authenticationManager,
@@ -48,7 +53,10 @@ public class UserService {
                        MapperClass mapperClass,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        IUserCredentialsRepository credentialsRepository,
-                       UserDetailService userDetailService,IRefreshTokenReporistory refreshTokenReporistory) {
+                       UserDetailService userDetailService,
+                       IRefreshTokenReporistory refreshTokenReporistory,
+                       IPasswordResetTokenRepository passwordResetTokenRepository,
+                       EmailService emailService) {
         this.userReporistory = userReporistory;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -56,7 +64,9 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userCredentialsRepository = credentialsRepository;
         this.userDetailService = userDetailService;
-        this.refreshTokenReporistory=refreshTokenReporistory;
+        this.refreshTokenReporistory = refreshTokenReporistory;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.emailService = emailService;
     }
 
     public UserProfileResponse register(RegisterRequest request) {
@@ -143,5 +153,49 @@ public class UserService {
        refreshToken.setToken(Token);
        refreshTokenReporistory.save(refreshToken);
        return Token;
-}
+    }
+
+    @Transactional
+    public void forgotPassword(String email) {
+        if (!userCredentialsRepository.existsByEmail(email)) {
+            throw new BaseException(new ErrorResponse("Bu e-posta adresiyle kayitli bir kullanici bulunamadi", 404));
+        }
+
+        // Clean up previous token if exists
+        passwordResetTokenRepository.findByEmail(email).ifPresent(passwordResetTokenRepository::delete);
+
+        // Generate 6-digit code (e.g. "048291")
+        String token = String.format("%06d", (int) (Math.random() * 1000000));
+        
+        PasswordResetToken resetToken = new PasswordResetToken();
+        resetToken.setEmail(email);
+        resetToken.setToken(token);
+        resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(10));
+        passwordResetTokenRepository.save(resetToken);
+
+        emailService.sendResetPasswordEmail(email, token);
+    }
+
+    @Transactional
+    public void resetPassword(String email, String token, String newPassword) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new BaseException(ERROR.INVALID_TOKEN.toErrorResponse()));
+
+        if (!resetToken.getEmail().equalsIgnoreCase(email)) {
+            throw new BaseException(new ErrorResponse("Gecersiz dogrulama kodu", 400));
+        }
+
+        if (resetToken.isExpired()) {
+            passwordResetTokenRepository.delete(resetToken);
+            throw new BaseException(ERROR.INVALID_TOKEN.toErrorResponse());
+        }
+
+        UserCredentials credentials = userCredentialsRepository.findByEmail(email)
+                .orElseThrow(() -> new BaseException(ERROR.NOT_FOUND.toErrorResponse()));
+
+        credentials.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        userCredentialsRepository.save(credentials);
+
+        passwordResetTokenRepository.delete(resetToken);
+    }
 }

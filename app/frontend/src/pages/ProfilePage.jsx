@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Container, Typography, Box, Grid, Card, CardContent,
-  Chip, Avatar, Divider, LinearProgress, CircularProgress, Alert
+  Chip, Avatar, Divider, LinearProgress, CircularProgress, Alert, Button
 } from '@mui/material';
 import Person from '@mui/icons-material/Person';
 import Star from '@mui/icons-material/Star';
@@ -14,13 +14,19 @@ import Email from '@mui/icons-material/Email';
 import Badge from '@mui/icons-material/Badge';
 import TrendingUp from '@mui/icons-material/TrendingUp';
 import Message from '@mui/icons-material/Message';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { catalogService, rentalService, reviewService, authService } from '../services/api';
 
 export default function ProfilePage() {
-  const { user, isAuthenticated, refreshProfile } = useAuth();
+  const { user, isAuthenticated, refreshProfile, logout } = useAuth();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
   const [stats, setStats] = useState({
     myListingsCount: 0,
     myRentalsCount: 0,
@@ -239,6 +245,29 @@ export default function ProfilePage() {
                       </Box>
                     ))}
                   </Box>
+
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="error"
+                    onClick={handleLogout}
+                    startIcon={<LogoutIcon />}
+                    sx={{
+                      mt: 3,
+                      borderRadius: '12px',
+                      py: 1.2,
+                      fontWeight: 700,
+                      textTransform: 'none',
+                      borderColor: '#fca5a5',
+                      color: '#ef4444',
+                      '&:hover': {
+                        background: '#fef2f2',
+                        borderColor: '#ef4444',
+                      }
+                    }}
+                  >
+                    Çıkış Yap
+                  </Button>
                 </CardContent>
               </Card>
             </Grid>

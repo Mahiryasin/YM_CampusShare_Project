@@ -106,13 +106,13 @@ export default function RegisterPage() {
 
           <Box component="form" onSubmit={handleSubmit} className="flex flex-col gap-2.5">
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField fullWidth label="Ad" placeholder="Mahir"
                   value={firstName} onChange={(e) => setFirstName(e.target.value)}
                   InputProps={{ startAdornment: <InputAdornment position="start"><Person sx={{ color: '#94a3b8', fontSize: 20 }} /></InputAdornment> }}
                   sx={{ '& .MuiOutlinedInput-root': { background: '#f8fafc' } }} />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={{ xs: 6 }}>
                 <TextField fullWidth label="Soyad" placeholder="Yasin"
                   value={lastName} onChange={(e) => setLastName(e.target.value)}
                   InputProps={{ startAdornment: <InputAdornment position="start"><Person sx={{ color: '#94a3b8', fontSize: 20 }} /></InputAdornment> }}
@@ -135,8 +135,8 @@ export default function RegisterPage() {
               value={password} onChange={(e) => setPassword(e.target.value)}
               helperText="En az 6 karakter olmalıdır"
               InputProps={{
-                startAdornment: <InputAdornment position="start"><Lock sx={{ color: '#94a3b8', fontSize: 20 }} /></InputAdornment>,
-                endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small">{showPassword ? <VisibilityOff sx={{ fontSize: 20 }} /> : <Visibility sx={{ fontSize: 20 }} />}</IconButton></InputAdornment>,
+                  startAdornment: <InputAdornment position="start"><Lock sx={{ color: '#94a3b8', fontSize: 20 }} /></InputAdornment>,
+                  endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small">{showPassword ? <VisibilityOff sx={{ fontSize: 20 }} /> : <Visibility sx={{ fontSize: 20 }} />}</IconButton></InputAdornment>,
               }}
               sx={{ '& .MuiOutlinedInput-root': { background: '#f8fafc' } }} />
 

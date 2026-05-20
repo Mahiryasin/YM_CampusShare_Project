@@ -103,6 +103,14 @@ export const authService = {
   getUserCount: async () => {
     const response = await api.get('/api/users/count');
     return response.data;
+  },
+  forgotPassword: async (email) => {
+    const response = await api.post('/api/users/forgot-password', { email });
+    return response.data;
+  },
+  resetPassword: async (email, token, newPassword) => {
+    const response = await api.post('/api/users/reset-password', { email, token, newPassword });
+    return response.data;
   }
 };
 

@@ -48,6 +48,15 @@ export default function Navbar() {
   // Dynamic Notifications states
   const [notifications, setNotifications] = useState([]);
   const [notiAnchorEl, setNotiAnchorEl] = useState(null);
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
+
+  const handleProfileClick = (event) => {
+    setProfileAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileClose = () => {
+    setProfileAnchorEl(null);
+  };
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -386,10 +395,9 @@ export default function Navbar() {
                   </Button>
                 )}
 
-                <Tooltip title="Profilim">
+                <Tooltip title="Profil Menüsü">
                   <Avatar
-                    component={Link}
-                    to="/profile"
+                    onClick={handleProfileClick}
                     sx={{
                       width: 36, height: 36, ml: 1,
                       background: 'linear-gradient(135deg, #e0e7ff, #c7d2fe)',
@@ -405,6 +413,38 @@ export default function Navbar() {
                     {getUserInitials()}
                   </Avatar>
                 </Tooltip>
+
+                <Menu
+                  anchorEl={profileAnchorEl}
+                  open={Boolean(profileAnchorEl)}
+                  onClose={handleProfileClose}
+                  disableScrollLock
+                  PaperProps={{
+                    sx: {
+                      width: 200,
+                      mt: 1.5,
+                      borderRadius: '16px',
+                      boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                      border: '1px solid rgba(226, 232, 240, 0.8)',
+                    }
+                  }}
+                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                >
+                  <MenuItem onClick={() => { handleProfileClose(); navigate('/profile'); }} sx={{ py: 1.2, px: 2, fontSize: '0.88rem' }}>
+                    <Person fontSize="small" sx={{ mr: 1.5, color: '#64748b' }} />
+                    Profilim
+                  </MenuItem>
+                  <MenuItem onClick={() => { handleProfileClose(); navigate('/rentals'); }} sx={{ py: 1.2, px: 2, fontSize: '0.88rem' }}>
+                    <EventNote fontSize="small" sx={{ mr: 1.5, color: '#64748b' }} />
+                    Kiralamalarım
+                  </MenuItem>
+                  <Divider sx={{ my: 1 }} />
+                  <MenuItem onClick={() => { handleProfileClose(); handleLogout(); }} sx={{ py: 1.2, px: 2, fontSize: '0.88rem', color: '#ef4444' }}>
+                    <Logout fontSize="small" sx={{ mr: 1.5, color: '#ef4444' }} />
+                    Çıkış Yap
+                  </MenuItem>
+                </Menu>
               </>
             ) : (
               <Button
